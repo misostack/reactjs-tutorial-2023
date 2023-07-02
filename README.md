@@ -5,7 +5,7 @@
 ```bash
 # config environment variables (remember to replace with your env variables)
 cp .env.template .env.development # dev mode
-cp .env.tetmplate .env.production # build mode
+cp .env.template .env.production # build mode
 
 npm run dev # run development mode
 npm run build # build production
@@ -99,4 +99,4 @@ export default App;
 !.env.template
 ```
 
-2. State, Props and Rendering
+2. Rendering
