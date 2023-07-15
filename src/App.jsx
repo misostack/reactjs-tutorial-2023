@@ -1,69 +1,41 @@
 import "./App.css";
 import enviroment from "./shared/environment";
 
-function Hello() {
-  return (
-    <li>
-      <strong>Hello</strong>
-    </li>
-  );
-}
 
 function App() {
-  const aString = "aString";
-  const aBoolean = true;
-  const aNumber = 0.3;
-  const anObject = {};
-  const anArray = ["green", "red", "yellow"];
-  const anArrayElements = [<Hello key="1" />, <Hello key="2" />];
-  for (let index = 3; index <= 10; index++) {
-    anArrayElements.push(<Hello key={index} />);
-  }
   return (
     <>
-      <h1>ReactJS Tutorial 2023</h1>
-      <header>
-        <h1>{enviroment.APP_NAME}</h1>
-      </header>
-      <main>
-        <h2>JSX</h2>
-        <br />
-        <h3
-          className="success"
-          style={{
-            fontSize: "2rem",
-          }}
-        >
-          Inline style and Class
-        </h3>
-        <p>aString: {aString}</p>
-        <p>aBoolean: {aBoolean}</p>
-        <p>aNumber: {aNumber}</p>
-        <p>An Array: {anArray}</p>
-        <p>An Object: {JSON.stringify(anObject)}</p>
-        <p>
-          {anArray.length > 3 ? (
-            <strong>Long list</strong>
-          ) : (
-            <strong>Short list</strong>
-          )}
-        </p>
-        <div>
-          An Array Of Elements: <ul>{anArrayElements}</ul>
+      <nav className="navbar navbar-expand-lg">
+        <div className="container-fluid">
+          <a className="navbar-brand" href="#">
+            <img src="https://nextjsvietnam.com/themes/2022/src/assets/images/logo.png" alt="Bootstrap" />
+          </a>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <a className="nav-link active" aria-current="page" href="#">{enviroment.APP_NAME}</a>
+              </li>              
+            </ul>
+          </div>          
         </div>
-        <ol style={{ listStyleType: "\\1F44" }}>
-          {anArrayElements.map((item) => item)}
-        </ol>
-        <button
-          onClick={() => {
-            alert("This button has been clicked!");
-          }}
-        >
-          On click event handler
-        </button>
+      </nav>
+      <main className="mt-4">
+      <div className="card">
+        <div className="card-header text-bg-primary">
+          <h3 className="card-title">Links</h3>
+        </div>
+        <div className="card-body">
+          contetn
+        </div>
+      </div>        
       </main>
-      <footer>
-        Copyright@JSBase - {enviroment.APP_VERSION} - {enviroment.MODE}
+      <footer className="mt-4">
+        <div className="container">
+          <p className="text-center">Copyright@JSBase - {enviroment.APP_VERSION} - {enviroment.MODE}</p>
+        </div>
       </footer>
     </>
   );

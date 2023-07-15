@@ -100,3 +100,54 @@ export default App;
 ```
 
 2. Rendering
+
+> Using bootstrap
+
+```sh
+npm install bootstrap sass --save
+```
+
+> index.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>%VITE_APP_NAME% - %MODE%</title>
+  </head>
+  <body>
+    <div id="root" class="container"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+```
+
+> main.jsx
+
+```jsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+// Bootstrap Bundle JS
+import "bootstrap/dist/js/bootstrap.bundle.min";
+// reset css
+import "./index.scss";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+> index.scss
+
+```scss
+$primary: #176d16;
+$danger: #ff4136;
+
+@import "node_modules/bootstrap/scss/bootstrap";
+```
