@@ -6,8 +6,4 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 // reset css
 import "./index.scss";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
