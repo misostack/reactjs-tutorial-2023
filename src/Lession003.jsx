@@ -2,23 +2,34 @@ import { useState } from "react";
 import enviroment from "./shared/environment";
 
 const Lession003 = () => {
-  const [counter, setCounter] = useState(0);
-  const [counter2, setCounter2] = useState(1);
-  console.log("Before render, counter:", counter, "counter2:", counter2);
+  const [stateObject, setStateObject] = useState({
+    a: {
+      b: {
+        c: 1,
+      },
+    },
+  });
+  console.log("Before render, stateObject.a.b.c:", stateObject.a.b.c);
   return (
     <>
       <h2>State and Event</h2>
-      <h3>Counter: {counter}</h3>
-      <h3>Counter2: {counter2}</h3>
+      <h3>StateObject: {JSON.stringify(stateObject)}</h3>
       <button
         type="button"
         className="btn btn-primary"
         onClick={(e) => {
           e.preventDefault();
-          console.log(`Increase counter from ${counter} to ${counter + 2}`);
-          console.log(`Increase counter from ${counter2} to ${counter2 + 3}`);
-          setCounter(counter + 2);
-          setCounter2(counter2 + 3);
+          setStateObject((obj) => {
+            console.log(obj.a.b.c, "obj === stateObject", obj === stateObject);
+            return {
+              ...obj,
+              a: {
+                b: {
+                  c: obj.a.b.c + 1,
+                },
+              },
+            };
+          });
         }}
       >
         Increase counter
