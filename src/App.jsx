@@ -3,53 +3,30 @@ import "./App.css";
 import LinkFormComponent from "./components/LinkFormComponent";
 import enviroment from "./shared/environment";
 import { Modal } from "bootstrap";
-import Lession003 from "./Lession003";
 
 function App() {
-  return (
-    <>
-      <Lession003></Lession003>
-    </>
-  );
-  console.log("1:App");
+  const linkFormComponentModalInstance = useRef(null);
   const linkFormComponentModal = useRef(null);
-  console.log("2:App", linkFormComponentModal);
-  const [
-    linkFormComponentBootstrapModalInstance,
-    setLinkFormComponentBootstrapModalInstance,
-  ] = useState(null);
-  console.log("3:App", linkFormComponentBootstrapModalInstance);
-
-  useEffect(() => {
-    console.log("4:useEffect", linkFormComponentModal);
-    const options = {
-      keyboard: true,
-      focus: true,
-      backdrop: true,
-    };
-    const modal = new Modal(linkFormComponentModal.current, options);
-    // handler events
-    linkFormComponentModal.current.addEventListener(
-      "hidden.bs.modal",
-      (event) => {
-        console.log("7:closeModalEvent");
-      }
-    );
-    console.log("5:useEffect", modal);
-    setLinkFormComponentBootstrapModalInstance(modal);
-  }, [linkFormComponentModal]);
-
-  const onNewLink = useCallback(
-    (e) => {
-      e.preventDefault();
-      console.log("6:useCallback", linkFormComponentBootstrapModalInstance);
-      if (linkFormComponentBootstrapModalInstance) {
-        linkFormComponentBootstrapModalInstance.show();
-      }
-    },
-    [linkFormComponentBootstrapModalInstance]
-  );
-
+  const { editLink, setEditLink } = useState(null);
+  const onNewLink = (e) => {
+    e.preventDefault();
+    if (!linkFormComponentModalInstance.current) {
+      console.log("new modal", linkFormComponentModalInstance.current);
+      linkFormComponentModalInstance.current = new Modal(
+        linkFormComponentModal.current,
+        {
+          backdrop: true,
+          focus: true,
+          keyboard: true,
+        }
+      );
+      linkFormComponentModalInstance.current.show();
+      console.log("created modal", linkFormComponentModalInstance.current);
+      return;
+    }
+    console.log("existing modal", linkFormComponentModalInstance.current);
+    linkFormComponentModalInstance.current.show();
+  };
   return (
     <>
       <nav className="navbar navbar-expand-lg">
@@ -106,7 +83,10 @@ function App() {
           </p>
         </div>
       </footer>
-      <LinkFormComponent ref={linkFormComponentModal}></LinkFormComponent>
+      <LinkFormComponent
+        ref={linkFormComponentModal}
+        link={editLink}
+      ></LinkFormComponent>
     </>
   );
 }

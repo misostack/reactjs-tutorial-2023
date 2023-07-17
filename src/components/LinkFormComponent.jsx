@@ -1,18 +1,12 @@
-import { forwardRef, useEffect } from "react";
+import { forwardRef } from "react";
 
-const LinkFormComponent = forwardRef((props, ref) => {
-  useEffect(() => {
-    ref.current.addEventListener("hidden.bs.modal", (event) => {
-      console.log("8:closeModalEvent");
-    });
-  }, [ref]);
-
+const LinkFormComponent = forwardRef(({ link, ...props }, ref) => {
   return (
-    <div id="LinkFormComponent" ref={ref} className="modal" tabIndex="-1">
+    <div id="LinkFormComponent" className="modal" tabIndex="-1" ref={ref}>
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Modal title</h5>
+            <h5 className="modal-title">{link ? "Edit Link" : "Add Link"}</h5>
             <button
               type="button"
               className="btn-close"
@@ -63,5 +57,7 @@ const LinkFormComponent = forwardRef((props, ref) => {
     </div>
   );
 });
+
+LinkFormComponent.displayName = "LinkFormComponent";
 
 export default LinkFormComponent;
