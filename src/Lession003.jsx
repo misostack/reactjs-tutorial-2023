@@ -1,28 +1,44 @@
 import { useState } from "react";
-import enviroment from "./shared/environment";
 
 const Lession003 = () => {
-  const [counter, setCounter] = useState(0);
-  const [counter2, setCounter2] = useState(1);
-  console.log("Before render, counter:", counter, "counter2:", counter2);
+  const [input, setInput] = useState("");
+  const [items, setItems] = useState([]);
+
   return (
     <>
-      <h2>State and Event</h2>
-      <h3>Counter: {counter}</h3>
-      <h3>Counter2: {counter2}</h3>
+      <h2>State Array</h2>
+      <div className="mb-3">
+        <label htmlFor="exampleFormControlInput1" className="form-label">
+          Item name
+        </label>
+        <input
+          value={input}
+          onChange={(e) => {
+            setInput(e.target.value);
+          }}
+          type="email"
+          className="form-control"
+          id="exampleFormControlInput1"
+          placeholder="name"
+        />
+      </div>
       <button
         type="button"
         className="btn btn-primary"
         onClick={(e) => {
           e.preventDefault();
-          console.log(`Increase counter from ${counter} to ${counter + 2}`);
-          console.log(`Increase counter from ${counter2} to ${counter2 + 3}`);
-          setCounter(counter + 2);
-          setCounter2(counter2 + 3);
+          setItems((items) => {
+            return [...items, input];
+          });
         }}
       >
-        Increase counter
+        Add new item
       </button>
+      <ul>
+        {items.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
     </>
   );
 };
