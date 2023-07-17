@@ -3,13 +3,28 @@ import "./App.css";
 import LinkFormComponent from "./components/LinkFormComponent";
 import enviroment from "./shared/environment";
 import { Modal } from "bootstrap";
+import { useImmer } from "use-immer";
+
+export const LINK_TYPE = {
+  LINK: "link",
+  YOUTUBE: "youtube",
+  IMAGE: "image",
+};
 
 function App() {
   const linkFormComponentModalInstance = useRef(null);
   const linkFormComponentModal = useRef(null);
-  const { editLink, setEditLink } = useState(null);
-  const onNewLink = (e) => {
-    e.preventDefault();
+  const [editLink, setEditLink] = useState(null);
+  const [links, setLinks] = useImmer([
+    {
+      id: 1,
+      link: "https://nextjsvietnam.com",
+      title: "https://nextjsvietnam.com",
+      type: LINK_TYPE.LINK,
+    },
+  ]);
+
+  const openModal = () => {
     if (!linkFormComponentModalInstance.current) {
       console.log("new modal", linkFormComponentModalInstance.current);
       linkFormComponentModalInstance.current = new Modal(
@@ -22,11 +37,29 @@ function App() {
       );
       linkFormComponentModalInstance.current.show();
       console.log("created modal", linkFormComponentModalInstance.current);
+      // handler event close
+      linkFormComponentModal.current.addEventListener("hide.bs.modal", () => {
+        // reset state
+        setEditLink(null);
+      });
       return;
     }
     console.log("existing modal", linkFormComponentModalInstance.current);
     linkFormComponentModalInstance.current.show();
   };
+
+  const onNewLink = (e) => {
+    e.preventDefault();
+    openModal();
+  };
+
+  const onEditLink = (link) => {
+    // set editLink
+    setEditLink(link);
+    // open modal
+    openModal();
+  };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg">
@@ -72,6 +105,22 @@ function App() {
               <button className="btn btn-primary" onClick={onNewLink}>
                 New Link
               </button>
+            </div>
+            <div>
+              {links.map((link) => (
+                <div key={link.id}>
+                  <h4>{link.title}</h4>
+                  <button
+                    type="button"
+                    className="btn btn-warning"
+                    onClick={() => {
+                      onEditLink(link);
+                    }}
+                  >
+                    Edit
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </div>
