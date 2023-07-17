@@ -1,18 +1,41 @@
 import { forwardRef, useEffect } from "react";
+import { useImmer } from "use-immer";
 
-const LinkFormComponent = forwardRef((props, ref) => {
+const LinkFormComponent = forwardRef(({ link, ...props }, ref) => {
+  const [formData, setFormData] = useImmer({
+    link: "",
+    title: "",
+  });
+  // ref handler event
   useEffect(() => {
-    ref.current.addEventListener("hidden.bs.modal", (event) => {
-      console.log("8:closeModalEvent");
-    });
+    if (ref) {
+      ref.current.addEventListener("hide.bs.modal", () => {
+        // reset state
+        setFormData({ link: "", title: "" });
+      });
+    }
   }, [ref]);
+  // watch change for link
+  useEffect(() => {
+    if (link) {
+      setFormData(() => {
+        return link;
+      });
+    }
+  }, [link]);
+  // watch change for fields
+  const onFieldChange = (e) => {
+    setFormData((v) => {
+      v[e.target.name] = e.target.value;
+    });
+  };
 
   return (
-    <div id="LinkFormComponent" ref={ref} className="modal" tabIndex="-1">
+    <div id="LinkFormComponent" className="modal" tabIndex="-1" ref={ref}>
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Modal title</h5>
+            <h5 className="modal-title">{link ? "Edit Link" : "Add Link"}</h5>
             <button
               type="button"
               className="btn-close"
@@ -21,29 +44,27 @@ const LinkFormComponent = forwardRef((props, ref) => {
             ></button>
           </div>
           <div className="modal-body">
+            {JSON.stringify(link)}
+            {JSON.stringify(formData)}
             <div className="mb-3">
-              <label htmlFor="exampleFormControlInput1" className="form-label">
-                Email address
-              </label>
+              <label className="form-label">Link</label>
               <input
-                type="email"
+                type="link"
+                name="link"
                 className="form-control"
-                id="exampleFormControlInput1"
-                placeholder="name@example.com"
+                value={formData.link}
+                onChange={onFieldChange}
               />
             </div>
             <div className="mb-3">
-              <label
-                htmlFor="exampleFormControlTextarea1"
-                className="form-label"
-              >
-                Example textarea
-              </label>
-              <textarea
+              <label className="form-label">Title</label>
+              <input
+                type="text"
                 className="form-control"
-                id="exampleFormControlTextarea1"
-                rows="3"
-              ></textarea>
+                name="title"
+                value={formData.title}
+                onChange={onFieldChange}
+              />
             </div>
           </div>
           <div className="modal-footer">
@@ -63,5 +84,7 @@ const LinkFormComponent = forwardRef((props, ref) => {
     </div>
   );
 });
+
+LinkFormComponent.displayName = "LinkFormComponent";
 
 export default LinkFormComponent;

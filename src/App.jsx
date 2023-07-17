@@ -3,52 +3,62 @@ import "./App.css";
 import LinkFormComponent from "./components/LinkFormComponent";
 import enviroment from "./shared/environment";
 import { Modal } from "bootstrap";
-import Lession003 from "./Lession003";
+import { useImmer } from "use-immer";
+
+export const LINK_TYPE = {
+  LINK: "link",
+  YOUTUBE: "youtube",
+  IMAGE: "image",
+};
 
 function App() {
-  return (
-    <>
-      <Lession003></Lession003>
-    </>
-  );
-  console.log("1:App");
+  const linkFormComponentModalInstance = useRef(null);
   const linkFormComponentModal = useRef(null);
-  console.log("2:App", linkFormComponentModal);
-  const [
-    linkFormComponentBootstrapModalInstance,
-    setLinkFormComponentBootstrapModalInstance,
-  ] = useState(null);
-  console.log("3:App", linkFormComponentBootstrapModalInstance);
-
-  useEffect(() => {
-    console.log("4:useEffect", linkFormComponentModal);
-    const options = {
-      keyboard: true,
-      focus: true,
-      backdrop: true,
-    };
-    const modal = new Modal(linkFormComponentModal.current, options);
-    // handler events
-    linkFormComponentModal.current.addEventListener(
-      "hidden.bs.modal",
-      (event) => {
-        console.log("7:closeModalEvent");
-      }
-    );
-    console.log("5:useEffect", modal);
-    setLinkFormComponentBootstrapModalInstance(modal);
-  }, [linkFormComponentModal]);
-
-  const onNewLink = useCallback(
-    (e) => {
-      e.preventDefault();
-      console.log("6:useCallback", linkFormComponentBootstrapModalInstance);
-      if (linkFormComponentBootstrapModalInstance) {
-        linkFormComponentBootstrapModalInstance.show();
-      }
+  const [editLink, setEditLink] = useState(null);
+  const [links, setLinks] = useImmer([
+    {
+      id: 1,
+      link: "https://nextjsvietnam.com",
+      title: "https://nextjsvietnam.com",
+      type: LINK_TYPE.LINK,
     },
-    [linkFormComponentBootstrapModalInstance]
-  );
+  ]);
+
+  const openModal = () => {
+    if (!linkFormComponentModalInstance.current) {
+      console.log("new modal", linkFormComponentModalInstance.current);
+      linkFormComponentModalInstance.current = new Modal(
+        linkFormComponentModal.current,
+        {
+          backdrop: true,
+          focus: true,
+          keyboard: true,
+        }
+      );
+      linkFormComponentModalInstance.current.show();
+      console.log("created modal", linkFormComponentModalInstance.current);
+      // handler event close
+      linkFormComponentModal.current.addEventListener("hide.bs.modal", () => {
+        // reset state
+        setEditLink(null);
+      });
+      return;
+    }
+    console.log("existing modal", linkFormComponentModalInstance.current);
+    linkFormComponentModalInstance.current.show();
+  };
+
+  const onNewLink = (e) => {
+    e.preventDefault();
+    openModal();
+  };
+
+  const onEditLink = (link) => {
+    // set editLink
+    setEditLink(link);
+    // open modal
+    openModal();
+  };
 
   return (
     <>
@@ -96,6 +106,22 @@ function App() {
                 New Link
               </button>
             </div>
+            <div>
+              {links.map((link) => (
+                <div key={link.id}>
+                  <h4>{link.title}</h4>
+                  <button
+                    type="button"
+                    className="btn btn-warning"
+                    onClick={() => {
+                      onEditLink(link);
+                    }}
+                  >
+                    Edit
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </main>
@@ -106,7 +132,10 @@ function App() {
           </p>
         </div>
       </footer>
-      <LinkFormComponent ref={linkFormComponentModal}></LinkFormComponent>
+      <LinkFormComponent
+        ref={linkFormComponentModal}
+        link={editLink}
+      ></LinkFormComponent>
     </>
   );
 }
