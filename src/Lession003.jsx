@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { useImmer } from "use-immer";
 
 const Lession003 = () => {
   const [input, setInput] = useState("");
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useImmer([]);
 
   return (
     <>
@@ -28,7 +29,7 @@ const Lession003 = () => {
         onClick={(e) => {
           e.preventDefault();
           setItems((items) => {
-            return [...items, input];
+            items.push(input);
           });
         }}
       >
