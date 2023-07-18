@@ -20,7 +20,7 @@ const YoutubeLink = ({ link }) => {
   return (
     <>
       <div className="embed-responsive ratio ratio-16x9">
-        <iframe className="embed-responsive-item" src={src}></iframe>
+        <iframe className="rounded embed-responsive-item" src={src}></iframe>
       </div>
     </>
   );
