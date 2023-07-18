@@ -89,6 +89,14 @@ function App() {
     openModal();
   };
 
+  const onDeleteLink = (link) => {
+    // delete link
+    setLinks((linkList) => {
+      const deleteLinkIndex = linkList.findIndex((l) => l.id === link.id);
+      linkList.splice(deleteLinkIndex, 1);
+    });
+  };
+
   const onSaveLink = (data) => {
     const link = structuredClone(data);
     // new link has no id
@@ -170,7 +178,12 @@ function App() {
             </div>
             <div className="mt-4">
               {links.map((link) => (
-                <LinkDetailComponent key={link.id} link={link} />
+                <LinkDetailComponent
+                  key={link.id}
+                  link={link}
+                  onEditLink={() => onEditLink(link)}
+                  onDeleteLink={() => onDeleteLink(link)}
+                />
               ))}
             </div>
             <PaginationComponent

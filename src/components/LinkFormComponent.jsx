@@ -48,8 +48,6 @@ const LinkFormComponent = forwardRef(({ link, onSaveLink, ...props }, ref) => {
             ></button>
           </div>
           <div className="modal-body">
-            {JSON.stringify(link)}
-            {JSON.stringify(formData)}
             <div className="mb-3">
               <label className="form-label">Link</label>
               <input

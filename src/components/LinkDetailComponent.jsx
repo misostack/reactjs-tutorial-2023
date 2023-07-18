@@ -29,12 +29,12 @@ const YoutubeLink = ({ link }) => {
 const ImageLink = ({ link }) => {
   return (
     <div>
-      <img src={link} class="rounded img-thumbnail"></img>
+      <img src={link} className="rounded img-thumbnail"></img>
     </div>
   );
 };
 
-const LinkDetailComponent = ({ link, ...props }) => {
+const LinkDetailComponent = ({ link, onEditLink, onDeleteLink, ...props }) => {
   const linkTypeBadge = {
     [LINK_TYPE.LINK]: "text-bg-primary",
     [LINK_TYPE.IMAGE]: "text-bg-warning",
@@ -76,12 +76,18 @@ const LinkDetailComponent = ({ link, ...props }) => {
                 <button
                   className="btn btn-warning"
                   style={{ width: "120px", height: "40px" }}
+                  onClick={() => {
+                    onEditLink(link);
+                  }}
                 >
                   Edit
                 </button>
                 <button
                   className="btn btn-danger"
                   style={{ width: "120px", height: "40px" }}
+                  onClick={() => {
+                    onDeleteLink(link);
+                  }}
                 >
                   Delete
                 </button>
