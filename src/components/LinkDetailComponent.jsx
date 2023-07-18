@@ -19,7 +19,7 @@ const YoutubeLink = ({ link }) => {
     : `https://www.youtube.com/embed/${v}?feature=oembed`;
   return (
     <>
-      <div className="embed-responsive embed-responsive-16by9">
+      <div className="embed-responsive ratio ratio-16x9">
         <iframe className="embed-responsive-item" src={src}></iframe>
       </div>
     </>
