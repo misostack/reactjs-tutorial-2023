@@ -4,6 +4,7 @@ import LinkFormComponent from "./components/LinkFormComponent";
 import enviroment from "./shared/environment";
 import { Modal } from "bootstrap";
 import { useImmer } from "use-immer";
+import PaginationComponent from "./components/PaginationComponent";
 
 export const LINK_TYPE = {
   LINK: "link",
@@ -24,6 +25,12 @@ function App() {
       publishedDate: new Date(),
     },
   ]);
+  const [paginator, setPaginator] = useImmer({
+    currentPage: 1,
+    numberOfPages: 10,
+    rowsPerPage: 5,
+    numberOfItems: 50,
+  });
 
   const openModal = () => {
     if (!linkFormComponentModalInstance.current) {
@@ -92,6 +99,11 @@ function App() {
       closeModal();
       return;
     }
+  };
+  const onChangeCurrentPage = (newCurrentPage) => {
+    setPaginator((p) => {
+      p.currentPage = newCurrentPage;
+    });
   };
 
   return (
@@ -163,6 +175,11 @@ function App() {
                 </div>
               ))}
             </div>
+            <PaginationComponent
+              numberOfPages={paginator.numberOfPages}
+              currentPage={paginator.currentPage}
+              onChangeCurrentPage={onChangeCurrentPage}
+            />
           </div>
         </div>
       </main>
