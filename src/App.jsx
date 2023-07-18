@@ -5,6 +5,7 @@ import enviroment from "./shared/environment";
 import { Modal } from "bootstrap";
 import { useImmer } from "use-immer";
 import PaginationComponent from "./components/PaginationComponent";
+import LinkDetailComponent from "./components/LinkDetailComponent";
 
 export const LINK_TYPE = {
   LINK: "link",
@@ -22,6 +23,20 @@ function App() {
       link: "https://nextjsvietnam.com",
       title: "https://nextjsvietnam.com",
       type: LINK_TYPE.LINK,
+      publishedDate: new Date(),
+    },
+    {
+      id: 2,
+      link: "https://www.youtube.com/watch?v=M9voXLBcKTk&t=2818s",
+      title: "Những Ca Khúc Nhạc Đỏ Cách Mạng",
+      type: LINK_TYPE.YOUTUBE,
+      publishedDate: new Date(),
+    },
+    {
+      id: 3,
+      link: "https://user-images.githubusercontent.com/31009750/246856332-ece36caa-82ef-4a4f-86d9-9dad4a108929.png",
+      title: "ReactJS Tutorial Banner",
+      type: LINK_TYPE.IMAGE,
       publishedDate: new Date(),
     },
   ]);
@@ -82,6 +97,7 @@ function App() {
       setLinks((linkList) => {
         Reflect.set(link, "id", Date.now());
         Reflect.set(link, "publishedDate", new Date());
+        Reflect.set(link, "type", LINK_TYPE.LINK);
         linkList.push(link);
       });
       // close modal
@@ -152,27 +168,9 @@ function App() {
                 New Link
               </button>
             </div>
-            <div>
+            <div className="mt-4">
               {links.map((link) => (
-                <div key={link.id}>
-                  <h4>
-                    <a rel="noreferrer" target="_blank" href={link.link}>
-                      {link.title}
-                    </a>
-                  </h4>
-                  <span>
-                    {link.publishedDate && link.publishedDate.toISOString()}
-                  </span>
-                  <button
-                    type="button"
-                    className="btn btn-warning"
-                    onClick={() => {
-                      onEditLink(link);
-                    }}
-                  >
-                    Edit
-                  </button>
-                </div>
+                <LinkDetailComponent key={link.id} link={link} />
               ))}
             </div>
             <PaginationComponent
