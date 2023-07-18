@@ -1,7 +1,7 @@
 import { forwardRef, useEffect } from "react";
 import { useImmer } from "use-immer";
 
-const LinkFormComponent = forwardRef(({ link, ...props }, ref) => {
+const LinkFormComponent = forwardRef(({ link, onSaveLink, ...props }, ref) => {
   const [formData, setFormData] = useImmer({
     link: "",
     title: "",
@@ -28,6 +28,10 @@ const LinkFormComponent = forwardRef(({ link, ...props }, ref) => {
     setFormData((v) => {
       v[e.target.name] = e.target.value;
     });
+  };
+  const onSaveChanges = () => {
+    onSaveLink(formData);
+    // close modal
   };
 
   return (
@@ -75,7 +79,11 @@ const LinkFormComponent = forwardRef(({ link, ...props }, ref) => {
             >
               Close
             </button>
-            <button type="button" className="btn btn-primary">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={onSaveChanges}
+            >
               Save changes
             </button>
           </div>

@@ -21,6 +21,7 @@ function App() {
       link: "https://nextjsvietnam.com",
       title: "https://nextjsvietnam.com",
       type: LINK_TYPE.LINK,
+      publishedDate: new Date(),
     },
   ]);
 
@@ -48,6 +49,12 @@ function App() {
     linkFormComponentModalInstance.current.show();
   };
 
+  const closeModal = () => {
+    if (linkFormComponentModalInstance.current) {
+      linkFormComponentModalInstance.current.hide();
+    }
+  };
+
   const onNewLink = (e) => {
     e.preventDefault();
     openModal();
@@ -58,6 +65,33 @@ function App() {
     setEditLink(link);
     // open modal
     openModal();
+  };
+
+  const onSaveLink = (data) => {
+    const link = structuredClone(data);
+    // new link has no id
+    // existed link has id
+    if (link && !link.id) {
+      setLinks((linkList) => {
+        Reflect.set(link, "id", Date.now());
+        Reflect.set(link, "publishedDate", new Date());
+        linkList.push(link);
+      });
+      // close modal
+      closeModal();
+      return;
+    }
+    // otherwise edit mode
+    if (link && link.id) {
+      setLinks((linkList) => {
+        Reflect.set(link, "publishedDate", new Date());
+        const editLinkIndex = linkList.findIndex((l) => l.id === link.id);
+        linkList[editLinkIndex] = link;
+      });
+      // close modal
+      closeModal();
+      return;
+    }
   };
 
   return (
@@ -109,7 +143,14 @@ function App() {
             <div>
               {links.map((link) => (
                 <div key={link.id}>
-                  <h4>{link.title}</h4>
+                  <h4>
+                    <a rel="noreferrer" target="_blank" href={link.link}>
+                      {link.title}
+                    </a>
+                  </h4>
+                  <span>
+                    {link.publishedDate && link.publishedDate.toISOString()}
+                  </span>
                   <button
                     type="button"
                     className="btn btn-warning"
@@ -135,6 +176,7 @@ function App() {
       <LinkFormComponent
         ref={linkFormComponentModal}
         link={editLink}
+        onSaveLink={onSaveLink}
       ></LinkFormComponent>
     </>
   );
