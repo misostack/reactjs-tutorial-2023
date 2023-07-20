@@ -40,6 +40,7 @@ const LinkDetailComponent = ({ link, onEditLink, onDeleteLink, ...props }) => {
     [LINK_TYPE.IMAGE]: "text-bg-warning",
     [LINK_TYPE.YOUTUBE]: "text-bg-danger",
   };
+  console.log("LinkDetailComponent:render");
   return (
     <>
       <div className="card my-4">

@@ -12,7 +12,7 @@ const PaginationComponent = ({
   let end = start + spaces - 1;
   if (end > numberOfPages) {
     end = numberOfPages;
-    start = numberOfPages - spaces + 1;
+    start = Math.max(1, numberOfPages - spaces + 1);
   }
   for (let index = start; index <= end; index++) {
     pages.push(index);
@@ -20,7 +20,6 @@ const PaginationComponent = ({
 
   return (
     <>
-      {pages}
       {pages.length > 1 && (
         <nav>
           <ul className="pagination">

@@ -1,9 +1,10 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LinkFormComponent from "../components/LinkFormComponent";
 import { Modal } from "bootstrap";
 import { useImmer } from "use-immer";
 import PaginationComponent from "../components/PaginationComponent";
 import LinkDetailComponent from "../components/LinkDetailComponent";
+import LinkFilterComponent from "../components/LinkFilterComponent";
 
 export const LINK_TYPE = {
   LINK: "link",
@@ -11,39 +12,152 @@ export const LINK_TYPE = {
   IMAGE: "image",
 };
 
+const searchLinkByQuery = (links, query) => {
+  let items = structuredClone(links);
+  if (query.type) {
+    items = items.filter((l) => l.type === query.type);
+  }
+  if (query.searchText) {
+    items = items.filter(
+      (l) =>
+        l.title.includes(query.searchText) || l.link.includes(query.searchText)
+    );
+  }
+  // pagination
+  const rowsPerPage = query.rowsPerPage || 1;
+  const currentPage = query.currentPage || 1;
+  const skip = (Math.max(1, currentPage) - 1) * Math.max(rowsPerPage, 0);
+  const numberOfItems = items.length;
+  const numberOfPages = Math.ceil(numberOfItems / rowsPerPage);
+
+  return {
+    currentPage,
+    rowsPerPage,
+    items: items.slice(skip, rowsPerPage),
+    numberOfItems,
+    numberOfPages,
+  };
+};
+
+const extractLinkType = (link) => {
+  if (link.endsWith("png") || link.endsWith("jpg") || link.endsWith("jpeg")) {
+    return LINK_TYPE.IMAGE;
+  }
+  if (link.startsWith("https://www.youtube.com")) {
+    return LINK_TYPE.YOUTUBE;
+  }
+  return LINK_TYPE.LINK;
+};
+
+const DBName = "NextJSVietnam-LinkList";
+const CollectionName = "links";
+
 const LinkManagementContainer = () => {
   const linkFormComponentModalInstance = useRef(null);
   const linkFormComponentModal = useRef(null);
   const [editLink, setEditLink] = useState(null);
-  const [links, setLinks] = useImmer([
-    {
-      id: 1,
-      link: "https://nextjsvietnam.com",
-      title: "https://nextjsvietnam.com",
-      type: LINK_TYPE.LINK,
-      publishedDate: new Date(),
-    },
-    {
-      id: 2,
-      link: "https://www.youtube.com/watch?v=M9voXLBcKTk&t=2818s",
-      title: "Những Ca Khúc Nhạc Đỏ Cách Mạng",
-      type: LINK_TYPE.YOUTUBE,
-      publishedDate: new Date(),
-    },
-    {
-      id: 3,
-      link: "https://user-images.githubusercontent.com/31009750/246856332-ece36caa-82ef-4a4f-86d9-9dad4a108929.png",
-      title: "ReactJS Tutorial Banner",
-      type: LINK_TYPE.IMAGE,
-      publishedDate: new Date(),
-    },
-  ]);
+  const [storedLinks, setStoredLinks] = useImmer([]);
+  const [links, setLinks] = useImmer([]);
   const [paginator, setPaginator] = useImmer({
     currentPage: 1,
-    numberOfPages: 10,
+    numberOfPages: 0,
     rowsPerPage: 5,
-    numberOfItems: 50,
+    numberOfItems: 0,
   });
+  const [objectStore, setObjectStore] = useState(null);
+  const db = useRef(null);
+
+  const loadLinksFromStorage = () => {
+    if (db.current) {
+      const objectStore = db.current
+        .transaction(CollectionName, "readwrite")
+        .objectStore(CollectionName);
+      setObjectStore(objectStore);
+      const res = objectStore.getAll();
+      res.onsuccess = (e) => {
+        setStoredLinks(e.target.result);
+      };
+    }
+  };
+
+  // init
+  useEffect(() => {
+    const DBOpenRequest = window.indexedDB.open(DBName, 1);
+    // connection error
+    DBOpenRequest.onerror = () => {
+      alert("Can not connect IndexDB");
+    };
+    // for upgrade/init
+    DBOpenRequest.onupgradeneeded = (event) => {
+      const db = event.target.result;
+
+      db.onerror = () => {
+        alert("Can not connect IndexDB");
+      };
+
+      // Create an objectStore for this CollectionName
+
+      const objectStore = db.createObjectStore(CollectionName, {
+        keyPath: "id",
+      });
+
+      // define what data items the objectStore will contain
+      objectStore.createIndex("link", "link", { unique: true });
+      objectStore.createIndex("title", "title", { unique: false });
+      objectStore.createIndex("type", "type", { unique: false });
+      objectStore.createIndex("publishedDate", "publishedDate", {
+        unique: false,
+      });
+
+      alert("Object store created.");
+    };
+    // success
+    DBOpenRequest.onsuccess = (event) => {
+      console.log(event);
+      if (!objectStore) {
+        // Store the result of opening the database in the db variable. This is used a lot below
+        db.current = DBOpenRequest.result;
+        loadLinksFromStorage();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    setLinks(storedLinks);
+  }, [storedLinks]);
+
+  const storeLink = (link, action) => {
+    // Open a read/write DB transaction, ready for adding the data
+    if (db.current) {
+      // Call an object store that's already been added to the database
+      const objectStore = db.current
+        .transaction(CollectionName, "readwrite")
+        .objectStore(CollectionName);
+      console.log(objectStore.indexNames);
+      console.log(objectStore.keyPath);
+      console.log(objectStore.name);
+      console.log(objectStore.transaction);
+      console.log(objectStore.autoIncrement);
+      let objectStoreRequest = null;
+      const { id } = link;
+
+      if (action === "add") {
+        objectStoreRequest = objectStore.add(link);
+      }
+      if (action === "edit") {
+        objectStoreRequest = objectStore.put(link);
+      }
+      if (action === "delete") {
+        objectStoreRequest = objectStore.delete(id);
+      }
+      if (objectStoreRequest) {
+        objectStoreRequest.onsuccess = () => {
+          console.log("object saved!");
+          loadLinksFromStorage();
+        };
+      }
+    }
+  };
 
   const openModal = () => {
     if (!linkFormComponentModalInstance.current) {
@@ -92,6 +206,7 @@ const LinkManagementContainer = () => {
     setLinks((linkList) => {
       const deleteLinkIndex = linkList.findIndex((l) => l.id === link.id);
       linkList.splice(deleteLinkIndex, 1);
+      storeLink(link, "delete");
     });
   };
 
@@ -103,28 +218,46 @@ const LinkManagementContainer = () => {
       setLinks((linkList) => {
         Reflect.set(link, "id", Date.now());
         Reflect.set(link, "publishedDate", new Date());
-        Reflect.set(link, "type", LINK_TYPE.LINK);
+        Reflect.set(link, "type", extractLinkType(link.link));
         linkList.push(link);
       });
       // close modal
       closeModal();
+      // on add link
+      storeLink(link, "add");
       return;
     }
     // otherwise edit mode
     if (link && link.id) {
       setLinks((linkList) => {
         Reflect.set(link, "publishedDate", new Date());
+        Reflect.set(link, "type", extractLinkType(link.link));
         const editLinkIndex = linkList.findIndex((l) => l.id === link.id);
         linkList[editLinkIndex] = link;
       });
       // close modal
       closeModal();
+      // on add link
+      storeLink(link, "edit");
       return;
     }
   };
+
   const onChangeCurrentPage = (newCurrentPage) => {
     setPaginator((p) => {
       p.currentPage = newCurrentPage;
+    });
+  };
+
+  const onFilterChanged = (filter) => {
+    const searchResult = searchLinkByQuery(storedLinks, {
+      ...filter,
+      currentPage: paginator.currentPage,
+    });
+    setLinks(searchResult.items);
+    setPaginator((p) => {
+      p.numberOfItems = searchResult.numberOfItems;
+      p.numberOfPages = searchResult.numberOfPages;
     });
   };
 
@@ -140,6 +273,7 @@ const LinkManagementContainer = () => {
               New Link
             </button>
           </div>
+          <LinkFilterComponent onFilterChanged={onFilterChanged} />
           <div className="mt-4">
             {links.map((link) => (
               <LinkDetailComponent
