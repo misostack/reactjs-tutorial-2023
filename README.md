@@ -151,3 +151,7 @@ $danger: #ff4136;
 
 @import "node_modules/bootstrap/scss/bootstrap";
 ```
+
+### Tham khảo
+
+- [https://web.dev/indexeddb/#updating-data](https://web.dev/indexeddb/#updating-data)
