@@ -1,4 +1,4 @@
-import { LINK_TYPE } from "../App";
+import { LINK_TYPE } from "../containers/LinkManagementContainer";
 
 const TextLink = ({ link, ...props }) => {
   return (
