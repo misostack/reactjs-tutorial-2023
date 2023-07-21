@@ -2,7 +2,7 @@ import { LINK_TYPE } from "../containers/LinkManagementContainer";
 
 const TextLink = ({ link, ...props }) => {
   return (
-    <a href="#" className="d-flex gap-2 align-items-center" {...props}>
+    <a href={link} className="d-flex gap-2 align-items-center" {...props}>
       <i className="bi bi-link fs-3"></i>
       {link}
     </a>

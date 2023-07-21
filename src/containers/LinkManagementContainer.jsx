@@ -280,15 +280,17 @@ const LinkManagementContainer = () => {
             ))}
           </div>
           <div className="d-flex justify-content-between">
-            <div>
-              Showing {(paginator.currentPage - 1) * paginator.rowsPerPage + 1}{" "}
-              to{" "}
-              {Math.min(
-                paginator.currentPage * paginator.rowsPerPage,
-                paginator.numberOfItems
-              )}{" "}
-              of {paginator.numberOfItems}
-            </div>
+            {paginator.numberOfItems > 0 && (
+              <div>
+                Showing{" "}
+                {(paginator.currentPage - 1) * paginator.rowsPerPage + 1} to{" "}
+                {Math.min(
+                  paginator.currentPage * paginator.rowsPerPage,
+                  paginator.numberOfItems
+                )}{" "}
+                of {paginator.numberOfItems}
+              </div>
+            )}
             <PaginationComponent
               numberOfPages={paginator.numberOfPages}
               currentPage={paginator.currentPage}
