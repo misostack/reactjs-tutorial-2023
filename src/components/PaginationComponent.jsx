@@ -1,3 +1,5 @@
+import { generatePagers } from "@/shared/utils";
+
 const PaginationComponent = ({
   numberOfPages,
   currentPage,
@@ -7,16 +9,7 @@ const PaginationComponent = ({
   const spaces = 5; // 5 page links
   const isDisabledPrevious = currentPage === 1;
   const isDisabledNext = currentPage === numberOfPages;
-  const pages = [];
-  let start = currentPage < spaces ? 1 : currentPage - Math.floor(spaces / 2);
-  let end = start + spaces - 1;
-  if (end > numberOfPages) {
-    end = numberOfPages;
-    start = Math.max(1, numberOfPages - spaces + 1);
-  }
-  for (let index = start; index <= end; index++) {
-    pages.push(index);
-  }
+  const pages = generatePagers({ numberOfPages, currentPage, spaces });
 
   return (
     <>

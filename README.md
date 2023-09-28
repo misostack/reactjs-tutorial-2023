@@ -152,6 +152,38 @@ $danger: #ff4136;
 @import "node_modules/bootstrap/scss/bootstrap";
 ```
 
+## Writing Test
+
+```sh
+npm install -D vitest
+npm install -D @vitest/ui
+```
+
+**package.json**
+
+```json
+{
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run"
+  }
+}
+```
+
+```sh
+npm run test:ui
+npm run test:run
+```
+
+**Default vitest config**
+
+```sh
+include: **/*.{test,spec}.?(c|m)[jt]s?(x)
+exclude:  **/node_modules/**, **/dist/**, **/cypress/**, **/.{idea,git,cache,output,temp}/**, **/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*
+watch exclude:  **/node_modules/**, **/dist/**
+```
+
 ### Tham khảo
 
 - [https://web.dev/indexeddb/#updating-data](https://web.dev/indexeddb/#updating-data)
