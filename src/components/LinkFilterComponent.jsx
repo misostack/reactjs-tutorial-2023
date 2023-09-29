@@ -2,7 +2,7 @@ import { useImmer } from "use-immer";
 import { LINK_TYPE } from "../containers/LinkManagementContainer";
 import { useEffect } from "react";
 
-const ROWS_PER_PAGE_OPTIONS = [5, 10, 15, 20, 25, 50, 100];
+const ROWS_PER_PAGE_OPTIONS = [1, 5, 10, 15, 20, 25, 50, 100];
 const DEFAULT_ROWS_PER_PAGE = 100;
 
 const LinkFilterComponent = ({ onFilterChanged, ...props }) => {

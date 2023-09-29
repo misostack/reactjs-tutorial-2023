@@ -1,4 +1,4 @@
-import { generatePagers } from "@/shared/utils";
+import { generatePagers } from "@app/shared/utils";
 
 const PaginationComponent = ({
   numberOfPages,
@@ -14,7 +14,7 @@ const PaginationComponent = ({
   return (
     <>
       {pages.length > 1 && (
-        <nav>
+        <nav aria-label="pagination">
           <ul className="pagination">
             <li
               className={
@@ -49,6 +49,7 @@ const PaginationComponent = ({
             {pages.map((p) => (
               <li key={p}>
                 <a
+                  aria-current={p === currentPage ? "page" : "false"}
                   style={{
                     cursor: "pointer",
                   }}

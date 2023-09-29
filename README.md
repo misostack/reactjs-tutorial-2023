@@ -184,6 +184,13 @@ exclude:  **/node_modules/**, **/dist/**, **/cypress/**, **/.{idea,git,cache,out
 watch exclude:  **/node_modules/**, **/dist/**
 ```
 
+### Test render
+
+```sh
+npm install --save-dev @testing-library/react
+```
+
 ### Tham khảo
 
 - [https://web.dev/indexeddb/#updating-data](https://web.dev/indexeddb/#updating-data)
+- [https://design-system.w3.org/components/pagination.html](https://design-system.w3.org/components/pagination.html)

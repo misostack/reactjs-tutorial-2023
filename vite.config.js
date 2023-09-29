@@ -5,14 +5,17 @@ import { fileURLToPath, URL } from "url";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  test: {},
+  test: {
+    environment: "happy-dom",
+    globals: true,
+  },
   server: {
     port: 3015,
   },
   resolve: {
     alias: [
       {
-        find: "@",
+        find: "@app",
         replacement: fileURLToPath(new URL("./src", import.meta.url)),
       },
     ],
