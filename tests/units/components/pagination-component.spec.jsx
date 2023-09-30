@@ -1,10 +1,6 @@
-/**
- * @jest-environment jsdom
- */
-import { describe, test, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import PaginationComponent from "@app/components/PaginationComponent";
+import PaginationComponent from "../../../src/components/PaginationComponent";
 
 /**
  * Test cases

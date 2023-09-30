@@ -1,5 +1,4 @@
-import { assert, expect, test } from "vitest";
-import { generatePagers } from "@/shared/utils";
+import { generatePagers } from "@app/shared/utils";
 
 test("generatePagers", () => {
   const testCases = [

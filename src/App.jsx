@@ -1,7 +1,7 @@
-import "@/App.css";
-import enviroment from "@/shared/environment";
+import "@app/App.css";
+import enviroment from "@app/shared/environment";
 
-import LinkManagementContainer from "@/containers/LinkManagementContainer";
+import LinkManagementContainer from "@app/containers/LinkManagementContainer";
 
 function App() {
   return (
