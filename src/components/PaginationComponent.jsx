@@ -17,6 +17,8 @@ const PaginationComponent = ({
         <nav aria-label="pagination">
           <ul className="pagination">
             <li
+              data-page-type="first"
+              aria-disabled={isDisabledPrevious ? true : false}
               className={
                 isDisabledPrevious ? "page-item disabled" : "page-item"
               }
@@ -32,6 +34,7 @@ const PaginationComponent = ({
               </a>
             </li>
             <li
+              data-page-type="previous"
               className={
                 isDisabledPrevious ? "page-item disabled" : "page-item"
               }
@@ -47,7 +50,7 @@ const PaginationComponent = ({
               </a>
             </li>
             {pages.map((p) => (
-              <li key={p}>
+              <li data-page-item={true} data-page-number={p} key={p}>
                 <a
                   aria-current={p === currentPage ? "page" : "false"}
                   style={{
@@ -62,7 +65,10 @@ const PaginationComponent = ({
                 </a>
               </li>
             ))}
-            <li className={isDisabledNext ? "page-item disabled" : "page-item"}>
+            <li
+              data-page-type="next"
+              className={isDisabledNext ? "page-item disabled" : "page-item"}
+            >
               <a
                 style={{
                   cursor: "pointer",
@@ -73,7 +79,10 @@ const PaginationComponent = ({
                 Next
               </a>
             </li>
-            <li className={isDisabledNext ? "page-item disabled" : "page-item"}>
+            <li
+              data-page-type="last"
+              className={isDisabledNext ? "page-item disabled" : "page-item"}
+            >
               <a
                 style={{
                   cursor: "pointer",
